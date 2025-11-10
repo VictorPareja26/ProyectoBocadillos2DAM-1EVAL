@@ -1,0 +1,100 @@
+body {
+    padding-top: 6em;
+    background-image: url(Image/Varios/Fondo/ImagenFondoNegro.jpg);
+    margin: 0;
+    padding-bottom: 30em;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #6387ab;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    padding: 1em 0;
+}
+
+.BotonCabecera {
+    text-decoration: none;
+    font-size: 18px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: white;
+    padding: 0.5em 1em;
+    background-color: #0056b3;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.BotonCabecera:hover {
+    background-color: #004085;
+    transform: scale(1.05);
+}
+
+.BotonCabecera:active {
+    background-color: #003366;
+    transform: scale(0.95);
+}
+h1 {
+    background-color: #6387ab;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+}
+
+th,
+td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: azure;
+}
+
+th {
+    background-color: #f4a261;
+    color: white;
+}
+
+.table_id {
+    background-color: white;
+    max-width: 900px;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.BotonInicioSesion {
+    font-weight: 550;
+    background-color: #415f7e;
+    color: #000000;
+    font-size: 16px;
+    padding: 10px 50px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.BotonInicioSesion:hover {
+    background-color: #0056b3;
+}
+
+#textoPagina {
+    color: white;
+    margin-top: 10px;
+}
+.buscador{
+    margin-bottom: 10px;
+}

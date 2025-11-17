@@ -8,7 +8,7 @@ class Conexion {
     private string $dbName = 'bdbocadillos';
     private string $user = 'root';
     private string $pass = '';
-    private string $port = '3307';
+    private array $ports = ['3306', '3307'];
 
     // Constructor privado
     private function __construct() {

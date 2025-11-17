@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="./CSS/Usuarios.css" />
+    <title>Gestión de Usuarios</title>
+    <script src="./ViewController/UsuariosVC.js"></script>
+</head>
+
+<body onload="getUsuarios()">
+
+    <header>
+        <input class="BotonCabecera" type="button" value="Volver Atrás" onclick="window.open('Administrador.html')">
+    </header>
+
+    <h1>Gestión de Usuarios</h1>
+
+    <div>
+        <input class="BotonInicioSesion" type="button" value="Agregar Usuario" onclick="window.open('añadirUsuario.html')">
+
+        <form>
+            <input class="buscador" type="text" id="nombreUsuario" placeholder="Escribe nombre">
+            <button type="submit">Buscar</button>
+        </form>
+
+        <table class="table_id">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre de Usuario</th>
+                    <th>Contraseña</th>
+                    <th>Correo</th>
+                    <th>Fecha</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpo_tabla">
+            </tbody>
+        </table>
+    </div>
+
+    <input type="hidden" id="pagina" value="1">
+    <input type="hidden" id="pages" value="1">
+    <input class="BotonInicioSesion" type="button" value="Primera" onclick="getUsuarios('primerapagina')">
+    <input class="BotonInicioSesion" type="button" value="Anterior" onclick="getUsuarios('anterior')">
+    <input class="BotonInicioSesion" type="button" value="Siguiente" onclick="getUsuarios('siguiente')">
+    <input class="BotonInicioSesion" type="button" value="Última" onclick="getUsuarios('ultimapagina')">
+
+</body>
+
+</html>

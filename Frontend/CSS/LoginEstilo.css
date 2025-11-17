@@ -1,0 +1,124 @@
+body {
+    margin: 0;
+    padding: 6em 0 30em;
+    background-image: url('../Image/Varios/Fondo/ImagenFondoNegro.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #f4f4f4;
+}
+
+#ContenedorPrincipal {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    gap: 1.5em;
+}
+
+#LogoElcampicoInicioSesion {
+    display: flex;
+    margin: 2%;
+    max-width: 100%;
+    height: auto;
+}
+
+#ZonaFormImagen {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 2em;
+    flex-wrap: wrap;
+    margin-top: 2em;
+}
+
+#PseudoFondo {
+    background: linear-gradient(145deg, #5a7ca3, #3e5a7a);
+    display: flex;
+    flex-direction: column;
+    gap: 1.2em;
+    padding: 3em;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    width: 520px;
+    text-align: center;
+    transition: transform 0.3s ease;
+
+}
+
+
+.TextoInicioSesion {
+    font-weight: bold;
+    font-size: 24px;
+    color: #ffffff;
+    margin-bottom: 0.5em;
+    letter-spacing: 1px;
+}
+
+#BotonInicioSesion {
+    font-weight: 600;
+    background-color: #1c2e44;
+    color: #ffffff;
+    font-size: 16px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    margin-top: 2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#BotonInicioSesion {
+    background-color: #2e4a6e;
+    transform: scale(1.05);
+}
+
+
+
+.RespuestaInicioSesion {
+    background-color: #f5f5f5;
+    border: 1px solid #2e4a6e;
+    padding: 0.8em;
+    border-radius: 6px;
+    color: #333;
+    font-size: 14px;
+}
+
+/* Imagen lateral */
+#ImagenLateral {
+    max-width: 300px;
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+}
+
+
+#fotoInicio {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 3em;
+}
+
+#FormularioInicio {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2em;
+    flex: 1;
+}
+
+#ImagenLateral {
+    max-width: 250px;
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+
+
+}

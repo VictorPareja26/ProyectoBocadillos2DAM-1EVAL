@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./CSS/LoginEstilo.css">
+    <title>Inicio de Sesión</title>
+    <script src="./ViewController/LoginVC.js"></script>
+
+</head>
+<body>
+
+<div id="ContenedorPrincipal">
+    <img id="LogoElcampicoInicioSesion" src="Image/Varios/LogoElCampico/logobueno.png" alt="Logo">
+
+    <div id="PseudoFondo">
+        <form id="fotoInicio" action="Usuario.php" method="post">
+            <div id="FormularioInicio">
+                <label class="TextoInicioSesion" for="Usuario">Usuario:</label>
+                <input class="RespuestaInicioSesion" type="text" name="RespuestaUsuario" id="RespuestaUsuario" required>
+
+                <label class="TextoInicioSesion" for="Contrasenya">Contraseña:</label>
+                <input class="RespuestaInicioSesion" type="password" name="RespuestaContrasenya" id="RespuestaContrasenya" required>
+
+                <a href="RecuperarCon.html">Recuperar Contraseña</a>
+                <button id="BotonInicioSesion" type="button" onclick="iniciarSesion()">Iniciar Sesión</button>
+            </div>
+            <img id="ImagenLateral" src="./InicioSesion/fotoLogin.png" alt="Foto de inicio">
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

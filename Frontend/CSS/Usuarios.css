@@ -95,6 +95,12 @@ th {
     color: white;
     margin-top: 10px;
 }
-.buscador{
-    margin-bottom: 10px;
+.buscador {
+    margin-bottom: 20px;
+    padding: 10px 10px;
+    width: 300px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
 }

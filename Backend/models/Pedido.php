@@ -24,8 +24,6 @@ class Pedido
         $this->fecha = $fecha;
 
     }
-
-
     //Terminar getPedido()
     public static function getPedido(){
 

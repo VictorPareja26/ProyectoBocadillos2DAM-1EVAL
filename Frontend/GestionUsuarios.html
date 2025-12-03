@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="gestionUsuarios.css" />
+    <title>Gestión de Usuarios</title>
+</head>
+
+<body>
+
+    <header>
+        <form action="Administrador.php" method="get">
+            <button class="BotonCabecera" type="submit">Volver Atrás</button>
+        </form>
+    </header>
+
+    <h1>Gestión de Usuarios</h1>
+
+    <div>
+        <form action="añadirUsuario.php" method="get">
+            <button class="BotonInicioSesion" type="submit">Agregar Usuario</button>
+        </form>
+
+        <!--Al hacer clic en Buscar, el formulario envía datos por POST, 
+        y entonces ese bloque de código se activa. -->
+        <form method="POST" action="">
+            <input class="buscador" type="text" name="nombreUsuario" placeholder="Escribe nombre"
+                value="<?php echo htmlspecialchars($buscar); ?>">
+            <button type="submit" name="buscar">Buscar</button>
+        </form>
+
+        <table class="table_id">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre de Usuario</th>
+                    <th>Contraseña</th>
+                    <th>Correo</th>
+                    <th>Fecha</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (count($usuarios)): ?>
+                    <?php foreach ($usuarios as $fila): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($fila['id']); ?></td>
+                            <td><?php echo htmlspecialchars($fila['nombreUsuario']); ?></td>
+                            <td><?php echo htmlspecialchars($fila['contrasenya']); ?></td>
+                            <td><?php echo htmlspecialchars($fila['correo'] ?? '-'); ?></td>
+                            <td><?php echo htmlspecialchars($fila['fecha'] ?? '-'); ?></td>
+                            <td><?php echo htmlspecialchars($fila['rol']); ?></td>
+                            <td>
+                                <a href="editarUsuario.php?id=<?php echo $fila['id']; ?>">
+                                    <img src="./Image/MenuAdministrador/lapiz.png" alt="Editar" width="20" />
+                                </a>
+                                <a href="eliminarUsuario.php?id=<?php echo $fila['id']; ?>"
+                                    onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
+                                    <img src="./Image/MenuAdministrador/usuario.png" alt="Eliminar" width="20" />
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="7">No existen registros</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <form method="POST" action="">
+        <input type="hidden" name="nombreUsuario" value="<?php echo htmlspecialchars($buscar); ?>">
+        <input type="hidden" name="pagina" value="<?php echo $pagina; ?>">
+        <input class="BotonInicioSesion" type="submit" value="Primera" name="primera">
+        <input class="BotonInicioSesion" type="submit" value="Anterior" name="anterior">
+        <input class="BotonInicioSesion" type="submit" value="Siguiente" name="siguiente">
+        <input class="BotonInicioSesion" type="submit" value="Última" name="ultima">
+    </form>
+
+    <div id="textoPagina">
+        Página <?php echo $pagina; ?> de <?php echo $total_paginas; ?> | Total usuarios: <?php echo $total_alumnos; ?>
+    </div>
+
+</body>
+
+</html>

@@ -13,7 +13,7 @@ try {
     $dbname = 'bdbocadillos';
     $user = 'root';
     $pass = '';
-    $port = "3307"; 
+    $port = "3306"; 
 
     $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8;port=$port";
     $pdo = new PDO($dsn, $user, $pass);

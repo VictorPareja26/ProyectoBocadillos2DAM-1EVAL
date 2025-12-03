@@ -8,20 +8,21 @@ class Conexion {
     private string $dbName = 'bdbocadillos';
     private string $user = 'root';
     private string $pass = '';
-    private array $ports = ['3306', '3307'];
+    private int $port = 3306; // Cambia esto si usas otro puerto (ej. 3307)
 
-    // Constructor privado
+    // Constructor privado (patrón Singleton)
     private function __construct() {
         try {
-            $dsn = "mysql:host={$this->host};dbname={$this->dbName};charset=utf8;port={$this->port}";
+            $dsn = "mysql:host={$this->host};port={$this->port};dbname={$this->dbName};charset=utf8";
             $this->conexion = new PDO($dsn, $this->user, $this->pass);
             $this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
+            // En proyecto de clase se puede hacer un die, en producción no
             die("Error de conexión: " . $e->getMessage());
         }
     }
 
-    // Método estático para obtener la instancia única
+    // Devuelve siempre la misma instancia
     public static function getInstancia(): Conexion {
         if (self::$instancia === null) {
             self::$instancia = new Conexion();
@@ -29,7 +30,7 @@ class Conexion {
         return self::$instancia;
     }
 
-    // Método para acceder a la conexión PDO
+    // Devuelve el objeto PDO para hacer consultas
     public function getConexion(): PDO {
         return $this->conexion;
     }

@@ -1,6 +1,3 @@
-//Agragar Usuario
-//Modificar
-//Elimninar
 function getUsuarios(operacion = null){
 
     const nombreInput = document.getElementById("nombreUsuario").value;
@@ -117,17 +114,29 @@ function getUsuarios(operacion = null){
         .catch(error => console.error('Error:', error));
 }
 
-function insertUsuario(){
-    const id = document.getElementById("id").value;
-    const nombreUsuario = document.getElementById("nombreUsuario").value;
-    const contrasenya = document.getElementById("contrasenya").value;
+function insertUsuario() {
 
-    // Preparamos los datos
+    const nombreUsuario = document.getElementById('nombreUsuario').value;
+    const contrasenya = document.getElementById('contrasenya').value;
+    const correo = document.getElementById('correo').value;
+    const rol = document.getElementById('rol').value;
+
+
+    // Validar que los campos no estén vacíos
+    if (!nombreUsuario || !contrasenya || !correo || !rol) {
+        alert("Por favor, completa todos los campos");
+        return;
+    }
+
+    // Preparar los datos para enviar al servidor
     let datos = {
         accion: "insert",
-        id: id,
+        id: null,
         nombreUsuario: nombreUsuario,
-        contrasenya: contrasenya
+        contrasenya: contrasenya,
+        correo: correo,
+        rol: rol,
+        fecha: null
     };
 
     fetch('../Backend/web_services/sw_usuario.php', {
@@ -142,92 +151,130 @@ function insertUsuario(){
     .then(response => {
         if (response.success) {
             alert(response.msg || "Usuario insertado correctamente");
+            window.location.href = "Usuarios.html";
         } else {
             alert("Error: " + (response.msg || "No se pudo insertar el usuario"));
         }
     })
-    .catch(error => console.error("Error:", error));
-
-
+    .catch(error => {
+        console.error("Error:", error);
+        alert("Error de conexión: " + error.message);
+    });
 }
 
 function modifyUsuario(){
+    const id = document.getElementById('id').value;
+    const nombreUsuario = document.getElementById('nombreUsuario').value;
+    const contrasenya = document.getElementById('contrasenya').value;
+    const correo = document.getElementById('correo').value;
+    const rol = document.getElementById('rol').value;
+
+    if (!id || !nombreUsuario || !contrasenya || !correo || !rol) {
+        alert("Por favor, completa todos los campos");
+        return;
+    }
+
+    const datos = {
+        accion: "update",
+        id: id,
+        nombreUsuario: nombreUsuario,
+        contrasenya: contrasenya,
+        correo: correo,
+        rol: rol,
+        fecha: null
+    };
+
+    fetch('../Backend/web_services/sw_usuario.php', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(datos)
+    })
+    .then(res => res.json())
+    .then(response => {
+        if (response.success) {
+            alert(response.msg || "Usuario actualizado correctamente");
+            window.location.href = "Usuarios.html";
+        } else {
+            alert("Error: " + (response.msg || "No se pudo actualizar el usuario"));
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("Error de conexión: " + error.message);
+    });
 }
 
-function deleteUsuario(){
+function deleteUsuario(id){
+    if (!confirm('¿Estás seguro de eliminar este usuario?')) {
+        return;
+    }
+    
     fetch('../Backend/web_services/sw_usuario.php', {
-        method: 'post',
+        method: 'POST',
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ accion: "delete", id: id })
+        body: JSON.stringify({ 
+            accion: "delete", 
+            id: id 
+        })
     })
     .then(res => res.json())
     .then(data => {
         if (data.success) {
             alert("Usuario eliminado correctamente");
+            getUsuarios();
         } else {
             alert("Error: " + data.msg);
         }
     })
-    .catch(error => console.error(error));
-
+    .catch(error => {
+        console.error(error);
+        alert("Error de conexión");
+    });
 }
 
 function rellenarCampos(){
-     // Obtener el DNI de la dirección de la página
-    const urlCompleta = window.location.href;
-    const url = new URL(urlCompleta);
-    const params = url.searchParams;
-    const p_id= params.get("id");
 
-    console.log("ID encontrado:", p_dni);
+    const url = new URL(window.location.href);
+    const p_id = url.searchParams.get("id"); 
 
-    //Encontrar los botones en la página
-    const botonInsertar = document.getElementById("insert");
-    const botonModificar = document.getElementById("update");
-
-    //Decidir si rellenamos el formulario o no
-    if (p_id !== null) {
-
-        botonInsertar.hidden = true;
-        botonModificar.hidden = false;
-
-        //  Pedir los datos del alumno al servidor usando Fetch
-        fetch('http://localhost:8080/DI/sw_usuario.php?id=' + p_id, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ accion: "get", dni: p_id }) 
-        })
-        .then(respuesta => {
-            if (!respuesta.ok) {
-                throw new Error('Error en la respuesta del servidor');
-            }
-            return respuesta.json();
-        })
-        .then(response => {
-            // Validar que response.data existe y es un array
-            if (response && Array.isArray(response.data) && response.data.length > 0) {
-                const usuario = response.data.find(a => a.id === p_id);
-                
-                // Validar que se encontró el alumno
-                if (usuario) {
-                    document.getElementById('id').value = usuario.id || '';
-                    document.getElementById('nombreUsuario').value = usuario.nombreUsuario || '';
-                } else {
-                    console.log('No se encontró el alumno con ID:', p_id);
-                }
-            } else {
-                console.log('No se encontraron datos para el ID:', p_id);
-            }
-        })
-        .catch(error => {
-            console.error("Algo salió mal al obtener los datos:", error);
-        });
-
-    } else {
-
-        // Si no hay un ID, estamos creando un nuevo alumno
-        botonInsertar.hidden = false;
-        botonModificar.hidden = true;
+    if (!p_id) {
+        alert('No se especificó un usuario para editar');
+        window.location.href = 'Usuarios.html';
+        return;
     }
 
+    fetch('../Backend/web_services/sw_usuario.php', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+            accion: "get", 
+            id: p_id 
+        })
+    })
+    .then(res => res.json())
+    .then(response => {
+        if (response.success && response.data) {
+            const usuario = response.data;
+            
+            // Rellenar los campos del formulario
+            document.getElementById('id').value = usuario.id || '';
+            document.getElementById('nombreUsuario').value = usuario.nombreUsuario || '';
+            document.getElementById('contrasenya').value = usuario.contrasenya || '';
+            document.getElementById('correo').value = usuario.correo || '';
+            document.getElementById('rol').value = usuario.rol || 'Alumno';
+        } else {
+            alert('No se pudo cargar el usuario');
+            window.location.href = 'Usuarios.html';
+        }
+    })
+    .catch(error => {
+        console.error("Error al obtener los datos:", error);
+        alert('Error al cargar los datos del usuario');
+        window.location.href = 'Usuarios.html';
+    });
+}
+
+function buscarUsuarios() {
+    document.getElementById("pagina").value = 1;
+    getUsuarios();
 }

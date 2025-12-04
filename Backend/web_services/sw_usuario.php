@@ -17,49 +17,69 @@ try {
     switch ($accion) {
 
         case 'login':
-            $usuario = new Usuario();
+            $usuarioNombre = $input['usuario'] ?? null;
+            $contrasenya = $input['contrasenya'] ?? null;
+
+            $usuario = new Usuario(null, $usuarioNombre, $contrasenya);
             $usuario->login();
             exit;
 
-
-
         case 'get':
-            $pagina = isset($input['pagina']) ? (int)$input['pagina'] : 1;
-            $nombre = isset($input['nombreUsuario']) ? $input['nombreUsuario'] : '';
-            $usuariosPorPagina = 5;
+            $id = isset($input['id']) ? (int) $input['id'] : null;
 
-            $inicio = ($pagina - 1) * $usuariosPorPagina;
+            // Si viene un ID, devolver solo ese usuario
+            if ($id) {
+                $usuario = Usuario::get($id);
 
-            try {
-                $pdo = Conexion::getInstancia()->getConexion();
+                if ($usuario) {
+                    $success = true;
+                    $data = $usuario;
+                } else {
+                    $success = false;
+                    $msg = 'Usuario no encontrado';
+                }
+            }
+            // Si no viene ID, listar usuarios con filtros y paginación
+            else {
+                $pagina = isset($input['pagina']) ? (int) $input['pagina'] : 1;
+                $nombre = isset($input['nombreUsuario']) ? $input['nombreUsuario'] : '';
 
-                // Contar total de usuarios que coinciden
-                $stmtCount = $pdo->prepare("SELECT COUNT(*) as total FROM usuarios WHERE nombreUsuario LIKE ?");
-                $stmtCount->execute(["%$nombre%"]);
-                $count = $stmtCount->fetch(PDO::FETCH_ASSOC)['total'];
+                try {
+                    // Preparar filtros
+                    $filters = [];
+                    if (!empty($nombre)) {
+                        $filters['nombreUsuario'] = $nombre;
+                    }
 
-                // Calcular total de páginas
-                $pages = ceil($count / $usuariosPorPagina);
+                    // Contar total de usuarios con filtros
+                    $count = Usuario::count($filters);
 
-                // Obtener usuarios de la página actual
-                $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE nombreUsuario LIKE ? LIMIT ?, ?");
-                $stmt->bindValue(1, "%$nombre%", PDO::PARAM_STR);
-                $stmt->bindValue(2, $inicio, PDO::PARAM_INT);
-                $stmt->bindValue(3, $usuariosPorPagina, PDO::PARAM_INT);
-                $stmt->execute();
-                $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    // Calcular total de páginas
+                    $pages = Usuario::getPages($count, 5);
 
-                $success = true;
-            } catch (Exception $e) {
-                $success = false;
-                $msg = $e->getMessage();
+                    // Obtener usuarios con filtros y paginación
+                    $data = Usuario::find($filters, $pagina, 5);
+
+                    $success = true;
+                } catch (Exception $e) {
+                    $success = false;
+                    $msg = $e->getMessage();
+                }
             }
             break;
 
-
         case 'insert':
-            $usuario = new Usuario($input["id"], $input["nombreUsuario"],
-            $input["contrasenya"],$input["rol"], $input["correo"], $input["fecha"]);
+
+            $usuario = new Usuario(
+                $input["id"],
+                $input["nombreUsuario"],
+                $input["contrasenya"],
+                $input["rol"],
+                $input["correo"],
+                $input["fecha"]
+            );
+
+
             $row = $usuario->insert();
 
             if ($row) {
@@ -91,6 +111,33 @@ try {
             }
             break;
 
+        case 'update':
+            $id = $input['id'] ?? null;
+
+            if ($id) {
+                $usuario = new Usuario(
+                    $id,
+                    $input["nombreUsuario"],
+                    $input["contrasenya"],
+                    $input["rol"],
+                    $input["correo"],
+                    $input["fecha"] ?? null
+                );
+                $row = $usuario->update();
+
+                if ($row) {
+                    $success = true;
+                    $msg = "Usuario actualizado correctamente";
+                } else {
+                    $success = false;
+                    $msg = "No se pudo actualizar el usuario";
+                }
+            } else {
+                $success = false;
+                $msg = "No se recibió el ID del usuario";
+            }
+            break;
+
         default:
             $msg = "Acción no reconocida";
             $success = false;
@@ -111,3 +158,5 @@ $salida = [
 ];
 
 echo json_encode($salida);
+
+?>

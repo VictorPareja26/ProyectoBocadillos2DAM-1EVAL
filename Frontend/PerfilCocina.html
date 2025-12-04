@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cocina</title>
+    <link rel="stylesheet" href="CSS/PerfilCocinaEstilo.css">
+</head>
+<body>
+
+    <!-- Título -->
+    <section class="TituloCocinaContenedor">
+        <h1 id="TituloCocina">Cocina</h1>
+    </section>
+
+    <!-- TABLA RESUMEN FUERA DEL RECUADRO -->
+    <section class="TablaResumenFuera">
+        <h2>Total de Bocadillos</h2>
+
+        <table class="MiniTabla">
+            <thead>
+                <tr>
+                    <th>Totales</th>
+                    <th id="totalPedidos">0</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="frio">Fríos</td>
+                    <td id="totalFrios">0</td>
+                </tr>
+                <tr>
+                    <td class="caliente">Calientes</td>
+                    <td id="totalCalientes">0</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- TABLA PRINCIPAL -->
+    <div class="ContenedorSecciones">
+        <section class="TablaPedidos">
+            <h2>Bocadillos Solicitados</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Alumno</th>
+                        <th>Bocadillo</th>
+                        <th>Tipo</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tbodyPedidos">
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+<script src="ViewController/PedidoVC.js"></script>
+
+</body>
+</html>

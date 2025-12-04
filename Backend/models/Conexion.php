@@ -10,13 +10,14 @@ class Conexion {
     private string $pass = '';
     private string $port = '3307';
 
-    // Constructor privado
+    // Constructor privado (patrón Singleton)
     private function __construct() {
         try {
-            $dsn = "mysql:host={$this->host};dbname={$this->dbName};charset=utf8;port={$this->port}";
+            $dsn = "mysql:host={$this->host};port={$this->port};dbname={$this->dbName};charset=utf8";
             $this->conexion = new PDO($dsn, $this->user, $this->pass);
             $this->conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
+            // En proyecto de clase se puede hacer un die, en producción no
             die("Error de conexión: " . $e->getMessage());
         }
     }

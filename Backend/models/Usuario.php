@@ -14,6 +14,7 @@ class Usuario
     private $rol;
     private $correo;
     private $fecha;
+    const OFFSET = 5;
 
     //Constructor
     public function __construct($id = null, $nombreUsuario = null, $contrasenya = null, $rol = null, $correo = null, $fecha = null)
@@ -27,21 +28,16 @@ class Usuario
     }
 
     //Funciones
-    public static function getUsuario(){
-
+    public static function get($id) {
         $pdo = Conexion::getInstancia()->getConexion();
-
-
-    }
+        $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+}
 
     public function login(){
         session_start();
 
-
-        // Recibir datos
-        $datos = json_decode(file_get_contents('php://input'), true);
-        $usuario = $datos['usuario'];
-        $contrasenya = $datos['contrasenya'];
 
         try {
             
@@ -50,7 +46,7 @@ class Usuario
             // Verificar usuario y contraseña
             $sql = "SELECT * FROM usuarios WHERE nombreUsuario = ? AND contrasenya = ?";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$usuario, $contrasenya]);
+            $stmt->execute([$this->nombreUsuario, $this->contrasenya]);
 
             if ($stmt->rowCount() === 1) {
                 $user = $stmt->fetch();
@@ -88,15 +84,13 @@ class Usuario
 
         $pdo = Conexion::getInstancia()->getConexion();
 
-
-        // Preparar los parámetros primero
         $params = [
             ':id' => $this->id,
             ':nombreUsuario' => $this->nombreUsuario,
             ':contrasenya' => $this->contrasenya,
             ':rol' => $this->rol,
             ':correo' => $this->correo,
-            ':fecha' => $this->fecha
+            ':fecha' => $this->fecha ? $this->fecha : date('Y-m-d H:i:s')
         ];
 
         $query = "INSERT INTO usuarios (id, nombreUsuario, contrasenya, rol, correo, fecha)
@@ -118,20 +112,93 @@ class Usuario
         return true;
     }
 
-    public function modifye(){
-        
+    public function update(){
         $pdo = Conexion::getInstancia()->getConexion();
 
         $query = "UPDATE usuarios 
-                  SET nombreUsuario = :nombreUsuario, contrasenya = :contrasenya, rol = :rol, correo = :correo, fecha = :fecha 
+                  SET nombreUsuario = :nombreUsuario, 
+                      contrasenya = :contrasenya, 
+                      rol = :rol, 
+                      correo = :correo, 
+                      fecha = :fecha 
                   WHERE id = :id";
-        $stmt = $pdo->prepare($query);
         
+        $stmt = $pdo->prepare($query);
+
+        $params = [
+            ':id' => $this->id,
+            ':nombreUsuario' => $this->nombreUsuario,
+            ':contrasenya' => $this->contrasenya,
+            ':correo' => $this->correo,
+            ':rol' => $this->rol,
+            ':fecha' => $this->fecha ? $this->fecha : date('Y-m-d H:i:s')
+        ];
+
+        $stmt->execute($params);
+
+        return $stmt->rowCount();
     }
 
-    public static function find($filters=[], $page = 1 ,$offset = self::OFFSET){}
+    public static function find($filters = [], $page = 1, $offset = self::OFFSET){
+        $pdo = Conexion::getInstancia()->getConexion();
+        $sql = "SELECT * FROM usuarios WHERE 1=1";
+        $params = [];
 
-    public static function count($filters=[]){
+        // Filtro por nombre de usuario
+        if (!empty($filters['nombreUsuario'])) {
+            $sql .= " AND nombreUsuario LIKE :nombreUsuario";
+            $params[':nombreUsuario'] = "%" . $filters['nombreUsuario'] . "%";
+        }
+
+        // Filtro por correo
+        if (!empty($filters['correo'])) {
+            $sql .= " AND correo LIKE :correo";
+            $params[':correo'] = "%" . $filters['correo'] . "%";
+        }
+
+        // Filtro por rol
+        if (!empty($filters['rol'])) {
+            $sql .= " AND rol = :rol";
+            $params[':rol'] = $filters['rol'];
+        }
+
+        // Paginación
+        $inicio = ($page - 1) * $offset;
+        $sql .= " LIMIT $inicio, $offset";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Método count para contar registros con filtros
+    public static function count($filters = []){
+        $pdo = Conexion::getInstancia()->getConexion();
+        $sql = "SELECT COUNT(*) as total FROM usuarios WHERE 1=1";
+        $params = [];
+
+        // Filtro por nombre de usuario
+        if (!empty($filters['nombreUsuario'])) {
+            $sql .= " AND nombreUsuario LIKE :nombreUsuario";
+            $params[':nombreUsuario'] = "%" . $filters['nombreUsuario'] . "%";
+        }
+
+        // Filtro por correo
+        if (!empty($filters['correo'])) {
+            $sql .= " AND correo LIKE :correo";
+            $params[':correo'] = "%" . $filters['correo'] . "%";
+        }
+
+        // Filtro por rol
+        if (!empty($filters['rol'])) {
+            $sql .= " AND rol = :rol";
+            $params[':rol'] = $filters['rol'];
+        }
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'];
     }
 
     public static function getPages($num_registros, $offset = self::OFFSET){
@@ -141,8 +208,6 @@ class Usuario
         return ceil($num_registros / $offset);
          
     }
-
-
 
 }
 ?>

@@ -8,7 +8,7 @@ class Conexion {
     private string $dbName = 'bdbocadillos';
     private string $user = 'root';
     private string $pass = '';
-    private array $ports = ['3306', '3307'];
+    private string $port = '3307';
 
     // Constructor privado
     private function __construct() {
@@ -21,7 +21,6 @@ class Conexion {
         }
     }
 
-    // Método estático para obtener la instancia única
     public static function getInstancia(): Conexion {
         if (self::$instancia === null) {
             self::$instancia = new Conexion();
@@ -29,7 +28,6 @@ class Conexion {
         return self::$instancia;
     }
 
-    // Método para acceder a la conexión PDO
     public function getConexion(): PDO {
         return $this->conexion;
     }

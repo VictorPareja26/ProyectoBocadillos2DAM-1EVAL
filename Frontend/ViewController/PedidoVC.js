@@ -1,10 +1,24 @@
-window.onload = function() {
+let paginaActual = 1; // Página inicial
+
+window.onload = function () {
     cargarPedidos();
 };
 
-function cargarPedidos() {
+function cargarPedidos(operacion = null) {
 
-    fetch("../Backend/web_services/sw_pedido.php?accion=listar")
+    if (operacion === "siguiente") paginaActual++;
+    if (operacion === "anterior" && paginaActual > 1) paginaActual--;
+    if (operacion === "primero") paginaActual = 1;
+    if (operacion === "ultimo") paginaActual = 9999;
+
+    let form = new FormData();
+    form.append("accion", "listar");
+    form.append("pagina", paginaActual);
+
+    fetch("../Backend/web_services/sw_pedido.php", {
+        method: "POST",
+        body: form
+    })
         .then(res => res.json())
         .then(function (response) {
 
@@ -16,13 +30,12 @@ function cargarPedidos() {
             const tbody = document.getElementById("tbodyPedidos");
             tbody.innerHTML = "";
 
-            let total = 0, frios = 0, calientes = 0;
+            let frios = 0, calientes = 0;
 
             if (response.datos.length > 0) {
 
                 response.datos.forEach(element => {
 
-                    total++;
                     if (element.tipo === "frio") frios++;
                     if (element.tipo === "caliente") calientes++;
 
@@ -54,14 +67,14 @@ function cargarPedidos() {
                     td_estado.innerText = element.estado;
                     td_estado.classList.add(
                         element.estado === "Pendiente"
-                        ? "entregaPendiente"
-                        : "entregaCompleta"
+                            ? "entregaPendiente"
+                            : "entregaCompleta"
                     );
                     tr.appendChild(td_estado);
 
                     // ACCIÓN
                     const td_acciones = document.createElement("td");
-                    
+
                     if (element.estado === "Pendiente") {
                         const botonEntregar = document.createElement("button");
                         botonEntregar.textContent = "Entregar";
@@ -76,9 +89,17 @@ function cargarPedidos() {
                 });
             }
 
-            document.getElementById("totalPedidos").innerText = total;
+            // Actualizar contadores
+            document.getElementById("totalPedidos").innerText = response.total;
             document.getElementById("totalFrios").innerText = frios;
             document.getElementById("totalCalientes").innerText = calientes;
+
+            // Actualizar página
+            paginaActual = response.pagina;
+            document.getElementById("pagina").value = paginaActual;
+
+            document.getElementById("anterior").disabled = paginaActual <= 1;
+            document.getElementById("siguiente").disabled = paginaActual >= response.totalPaginas;
         });
 }
 

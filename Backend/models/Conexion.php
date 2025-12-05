@@ -8,7 +8,7 @@ class Conexion {
     private string $dbName = 'bdbocadillos';
     private string $user = 'root';
     private string $pass = '';
-    private string $port = '3307';
+    private string $port = '3306';
 
     // Constructor privado (patrón Singleton)
     private function __construct() {

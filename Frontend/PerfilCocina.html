@@ -4,9 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cocina</title>
-    <link rel="stylesheet" href="CSS/PerfilCocinaEstilo.css">
+    <link rel="stylesheet" href="CSS/PerfilCocinaEstilo.css"> 
+    <script src="ViewController/PedidoVC.js"></script>
+
 </head>
 <body>
+    <!-- CABECERA -->
+    <header>
+        <input class="BotonCabecera" type="button" value="Cerrar Sesión" onclick="window.open('Login.html')">
+    </header>
 
     <!-- Título -->
     <section class="TituloCocinaContenedor">
@@ -59,8 +65,14 @@
             </table>
         </section>
     </div>
-
-<script src="ViewController/PedidoVC.js"></script>
+    
+    <div class="paginador">
+        <button onclick="cargarPedidos('primero')">⏮</button>
+        <button id="anterior" onclick="cargarPedidos('anterior')">⬅️</button>
+        <input type="text" id="pagina" value="1" readonly>
+        <button id="siguiente" onclick="cargarPedidos('siguiente')">➡️</button>
+        <button onclick="cargarPedidos('ultimo')">⏭</button>
+    </div>
 
 </body>
 </html>

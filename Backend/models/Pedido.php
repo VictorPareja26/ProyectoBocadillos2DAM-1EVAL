@@ -24,27 +24,41 @@ class Pedido
     // --------------------------------------------------------------
     // LISTAR TODOS LOS PEDIDOS — PARA COCINA
     // --------------------------------------------------------------
-    public static function getPedido()
-    {
-        $pdo = Conexion::getInstancia()->getConexion();
+   public static function getPedido($pagina = 1, $offset = 5)
+{
+    $pdo = Conexion::getInstancia()->getConexion();
 
-        $sql = "SELECT 
-                    p.id,
-                    u.nombreUsuario AS alumno,
-                    b.nombre AS bocadillo,
-                    p.tipo,
-                    p.fecha,
-                    p.estado
-                FROM pedidos p
-                INNER JOIN usuarios u ON p.usuario_id = u.id
-                INNER JOIN bocadillos b ON p.bocadillo_id = b.id
-                ORDER BY p.id DESC";
+    $inicio = ($pagina - 1) * $offset;
 
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute();
+    $sql = "SELECT 
+                p.id,
+                u.nombreUsuario AS alumno,
+                b.nombre AS bocadillo,
+                p.tipo,
+                DATE(p.fecha) AS fecha,
+                p.estado
+            FROM pedidos p
+            INNER JOIN usuarios u ON p.usuario_id = u.id
+            INNER JOIN bocadillos b ON p.bocadillo_id = b.id
+            WHERE DATE(p.fecha) = CURDATE()
+            ORDER BY p.id DESC
+            LIMIT :inicio, :offset";
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':inicio', $inicio, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public static function contarHoy()
+{
+    $pdo = Conexion::getInstancia()->getConexion();
+    $sql = "SELECT COUNT(*) FROM pedidos WHERE DATE(fecha) = CURDATE()";
+    return $pdo->query($sql)->fetchColumn();
+}
+
 
     // --------------------------------------------------------------
     // INSERTAR PEDIDO (lo usa el alumno)

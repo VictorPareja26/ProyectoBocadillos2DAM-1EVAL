@@ -5,44 +5,81 @@ window.onload = function() {
 function cargarPedidos() {
 
     fetch("../Backend/web_services/sw_pedido.php?accion=listar")
-    .then(r => r.json())
-    .then(data => {
+        .then(res => res.json())
+        .then(function (response) {
 
-        let tbody = document.getElementById("tbodyPedidos");
-        tbody.innerHTML = "";
+            if (!response.exito) {
+                alert("Error cargando pedidos");
+                return;
+            }
 
-        let total = 0, frios = 0, calientes = 0;
+            const tbody = document.getElementById("tbodyPedidos");
+            tbody.innerHTML = "";
 
-        data.datos.forEach(function(p) {
+            let total = 0, frios = 0, calientes = 0;
 
-            total++;
-            if (p.tipo === "frio") frios++;
-            if (p.tipo === "caliente") calientes++;
+            if (response.datos.length > 0) {
 
-            let estadoClass = (p.estado === "Pendiente") ? "entregaPendiente" : "entregaCompleta";
+                response.datos.forEach(element => {
 
-            let boton = (p.estado === "Pendiente")
-            ? `<button onclick="marcarEntregado(${p.id})">Entregar</button>`
-            : `<span style='color:green;font-size:20px;'>✔</span>`;
+                    total++;
+                    if (element.tipo === "frio") frios++;
+                    if (element.tipo === "caliente") calientes++;
 
-            let tr = `
-                <tr>
-                    <td>${p.alumno}</td>
-                    <td>${p.bocadillo}</td>
-                    <td class="${p.tipo}">${p.tipo}</td>
-                    <td>${p.fecha}</td>
-                    <td class="${estadoClass}">${p.estado}</td>
-                    <td>${boton}</td>
-                </tr>
-            `;
+                    const tr = document.createElement("tr");
 
-            tbody.innerHTML += tr;
+                    // ALUMNO
+                    const td_alumno = document.createElement("td");
+                    td_alumno.innerText = element.alumno;
+                    tr.appendChild(td_alumno);
+
+                    // BOCADILLO
+                    const td_bocadillo = document.createElement("td");
+                    td_bocadillo.innerText = element.bocadillo;
+                    tr.appendChild(td_bocadillo);
+
+                    // TIPO
+                    const td_tipo = document.createElement("td");
+                    td_tipo.innerText = element.tipo;
+                    td_tipo.classList.add(element.tipo);
+                    tr.appendChild(td_tipo);
+
+                    // FECHA
+                    const td_fecha = document.createElement("td");
+                    td_fecha.innerText = element.fecha;
+                    tr.appendChild(td_fecha);
+
+                    // ESTADO
+                    const td_estado = document.createElement("td");
+                    td_estado.innerText = element.estado;
+                    td_estado.classList.add(
+                        element.estado === "Pendiente"
+                        ? "entregaPendiente"
+                        : "entregaCompleta"
+                    );
+                    tr.appendChild(td_estado);
+
+                    // ACCIÓN
+                    const td_acciones = document.createElement("td");
+                    
+                    if (element.estado === "Pendiente") {
+                        const botonEntregar = document.createElement("button");
+                        botonEntregar.textContent = "Entregar";
+                        botonEntregar.onclick = () => marcarEntregado(element.id);
+                        td_acciones.appendChild(botonEntregar);
+                    } else {
+                        td_acciones.innerHTML = `<span style="color:green;font-size:20px;">✔</span>`;
+                    }
+
+                    tr.appendChild(td_acciones);
+                    tbody.appendChild(tr);
+                });
+            }
+
+            document.getElementById("totalPedidos").innerText = total;
+            document.getElementById("totalFrios").innerText = frios;
+            document.getElementById("totalCalientes").innerText = calientes;
         });
-
-        document.getElementById("totalPedidos").innerText = total;
-        document.getElementById("totalFrios").innerText = frios;
-        document.getElementById("totalCalientes").innerText = calientes;
-    });
 }
 
 function marcarEntregado(id) {
@@ -54,6 +91,6 @@ function marcarEntregado(id) {
         method: "POST",
         body: form
     })
-    .then(r => r.json())
-    .then(() => cargarPedidos());
+        .then(res => res.json())
+        .then(() => cargarPedidos());
 }

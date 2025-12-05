@@ -1,114 +1,35 @@
-
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Menu Bocadillos</title>
-    <link rel="stylesheet" href="MenuBocadillo.css" />
+    <link rel="stylesheet" href="./CSS/MenuBocadillo.css" />
+    <title>Menú de Bocadillos</title>
+    <script src="./ViewController/MenuBocadilloVC.js"></script>
 </head>
 
-<body>
+<body onload="getBocadillos()">
+
     <header>
-        <nav id="cabecera">
-            <form action="login.html" method="get">
-                <button class="BotonCabecera" type="submit">Volver Atrás</button>
-            </form>
-            <a class="BotonCabecera" href="index.html">Usuario</a>
-            <a class="BotonCabecera" href="Login.html">Cerrar Sesión</a>
-        </nav>
+        <input class="BotonCabecera" type="button" value="Cerrar Sesión" onclick="window.open('Login.html')">
     </header>
 
-    <div class="mensaje">
+    <h1>Menú de Bocadillos</h1>
 
-        <?php if ($mensaje): ?>
-            <div class="mensaje-aviso">
-                <?php echo htmlspecialchars($mensaje); ?>
-            </div>
-        <?php endif; ?>
+    <!-- Mensaje de estado -->
+    <div id="mensaje"></div>
 
-        <div class="fila-bocata">
-
-            <!-- Bocadillo caliente -->
-            <?php if ($bocadilloCaliente): ?>
-                <div class="bocata">
-                    <img id="imagenEstado" src="Image/MenuBocadillo/caliente.png" alt="Icono Caliente" />
-                    <img src="<?php echo htmlspecialchars($bocadilloCaliente['imagen']); ?>"
-                        alt="<?php echo htmlspecialchars($bocadilloCaliente['nombre']); ?>" />
-                    <p class="bocata-info"><?php echo htmlspecialchars($bocadilloCaliente['nombre']); ?></p>
-                    <p class="bocata-descripcion"><?php echo htmlspecialchars($bocadilloCaliente['descripcion']); ?></p>
-                    <p class="bocata-precio">Precio: <?php echo htmlspecialchars($bocadilloCaliente['precio']); ?> €</p>
-
-                    <div class="imagenAlergenos">
-                        <img id="imagenAlergenos" src="Image/MenuBocadillo/trigo.png" alt="trigo">
-                        <img id="imagenAlergenos" src="Image/MenuBocadillo/pescado.png" alt="pescado">
-                        <img id="imagenAlergenos" src="Image/MenuBocadillo/leche.png" alt="leche">
-                        <img id="imagenAlergenos" src="Image/MenuBocadillo/huevo.png" alt="Huevo">
-                    </div>
-
-                    <button id="BotonPedirBocadillo" data-id="<?php echo $bocadilloCaliente['id']; ?>" data-tipo="caliente"
-                        <?php echo $yaPedidoHoy ? 'disabled' : ''; ?>>
-                        <?php echo $yaPedidoHoy ? 'YA HAS PEDIDO HOY' : 'Pedir'; ?>
-                    </button>
-                </div>
-            <?php endif; ?>
-
-            <!-- Bocadillo frío -->
-            <?php if ($bocadilloFrio): ?>
-                <div class="bocata">
-                    <img id="imagenEstado" src="Image/MenuBocadillo/frio.png" alt="Icono Frío" />
-                    <img src="<?php echo htmlspecialchars($bocadilloFrio['imagen']); ?>"
-                        alt="<?php echo htmlspecialchars($bocadilloFrio['nombre']); ?>" />
-                    <p class="bocata-info"><?php echo htmlspecialchars($bocadilloFrio['nombre']); ?></p>
-                    <p class="bocata-descripcion"><?php echo htmlspecialchars($bocadilloFrio['descripcion']); ?></p>
-                    <p class="bocata-precio">Precio: <?php echo htmlspecialchars($bocadilloFrio['precio']); ?> €</p>
-
-                    <div class="imagenAlergenos">
-                        <img id="imagenAlergenos" src="Image/MenuBocadillo/trigo.png" alt="trigo">
-                        <img id="imagenAlergenos" src="Image/MenuBocadillo/leche.png" alt="leche">
-                        <img id="imagenAlergenos" src="Image/MenuBocadillo/huevo.png" alt="Huevo">
-                    </div>
-
-                    <button id="BotonPedirBocadillo" data-id="<?php echo $bocadilloFrio['id']; ?>" data-tipo="frio" 
-                        <?php echo $yaPedidoHoy ? 'disabled' : ''; ?>>
-                        <?php echo $yaPedidoHoy ? 'YA HAS PEDIDO HOY' : 'Pedir'; ?>
-                    </button>
-                </div>
-            <?php endif; ?>
-
-        </div>
-
-        <!-- Botón cancelar único centrado -->
-        <?php if ($yaPedidoHoy): ?>
-            <div class="contenedorCancelar">
-                <form method="POST">
-                    <input type="hidden" name="cancelar_pedido" value="1" />
-                    <button type="submit" class="BotonCancelar">Cancelar Pedido</button>
-                </form>
-            </div>
-        <?php endif; ?>
-
-        <!-- Formulario oculto para enviar pedido -->
-        <form id="formularioPedido" method="POST" style="display:none;">
-            <input type="hidden" name="bocadillo_id" id="inputBocadilloId" />
-            <input type="hidden" name="tipo" id="inputTipo" />
-        </form>
+    <!-- Bocadillos del día -->
+    <div class="fila-bocata" id="contenedor_bocadillos">
+        
     </div>
 
-    <script>
-        document.querySelectorAll('#BotonPedirBocadillo').forEach(button => {
-            button.addEventListener('click', function () {
-                if (this.disabled) {
-                    alert("Ya has realizado un pedido hoy.");
-                    return;
-                }
-                document.getElementById('inputBocadilloId').value = this.dataset.id;
-                document.getElementById('inputTipo').value = this.dataset.tipo;
-                document.getElementById('formularioPedido').submit();
-            });
-        });
-    </script>
+    <!-- Botón cancelar pedido -->
+    <div class="contenedorCancelar" id="contenedorCancelar" style="display:none;">
+        <input class="BotonCancelar" type="button" value="Cancelar Pedido" onclick="cancelarPedido()">
+    </div>
+
 </body>
 
 </html>

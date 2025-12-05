@@ -1,7 +1,6 @@
 <?php
 
 require_once 'Conexion.php';
-header('Content-Type: application/json');
 
 class Pedido
 {

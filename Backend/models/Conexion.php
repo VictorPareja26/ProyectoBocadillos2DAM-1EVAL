@@ -8,7 +8,7 @@ class Conexion {
     private string $dbName = 'bdbocadillos';
     private string $user = 'root';
     private string $pass = '';
-    private int $port = 3306; // Cambia esto si usas otro puerto (ej. 3307)
+    private string $port = '3307';
 
     // Constructor privado (patrón Singleton)
     private function __construct() {
@@ -22,7 +22,6 @@ class Conexion {
         }
     }
 
-    // Devuelve siempre la misma instancia
     public static function getInstancia(): Conexion {
         if (self::$instancia === null) {
             self::$instancia = new Conexion();
@@ -30,7 +29,6 @@ class Conexion {
         return self::$instancia;
     }
 
-    // Devuelve el objeto PDO para hacer consultas
     public function getConexion(): PDO {
         return $this->conexion;
     }

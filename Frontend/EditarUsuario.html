@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Usuario</title>
+    <link rel="stylesheet" href="./CSS/editarUsuario.css">
+    <script src="./ViewController/UsuariosVC.js"></script>
+</head>
+<body onload="rellenarCampos()">
+     <header>
+<input class="BotonCabecera" type="button" value="Volver Atrás" onclick="window.location.href='Usuarios.html'">
+    </header>
+    <div id="PseudoFondo">
+        <h1>Editar Usuario</h1>
+        <form>
+            <input type="hidden" id="id" name="id">
+            
+            <label for="nombreUsuario">Nombre de Usuario:</label><br>
+            <input type="text" id="nombreUsuario" name="nombreUsuario" required><br><br>
+            
+            <label for="contrasenya">Contraseña:</label><br>
+            <input type="password" id="contrasenya" name="contrasenya" required><br><br>
+            
+            <label for="correo">Correo:</label><br>
+            <input type="email" id="correo" name="correo" required><br><br>
+            
+            <label for="rol">Rol:</label><br>
+            <select id="rol" name="rol" required>
+                <option value="Cocina">Cocina</option>
+                <option value="Alumno">Alumno</option>
+                <option value="Administrador">Administrador</option>
+            </select><br><br>
+            
+            <button id="BotonInicioSesion" type="button" onclick="modifyUsuario()">Actualizar Usuario</button>
+        </form>
+    </div>
+</body>
+</html>

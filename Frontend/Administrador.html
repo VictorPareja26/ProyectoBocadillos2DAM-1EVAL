@@ -10,43 +10,27 @@
 
 <body>
 
- <header>
-        <form action="login.html" method="get">
-            <button class="BotonCabecera" type="submit">Volver Atrás</button>
-        </form>
+    <header>
+            <button class="BotonCabecera" type="button" onclick="window.location.href=('login.html')">Volver Atrás</button>
     </header>
 
     <h1>Panel de Administración</h1>
 
     <div class="ContenedorSecciones">
-        <section class="PseudoFondo">
-            <h2>Descuentos</h2>
-
-            <form method="get">
-                <button class="BotonInicioSesion" type="submit">Gestión Descuentos</button>
-            </form>
-
-        </section>
 
         <section class="PseudoFondo">
             <h2>Bocadillos</h2>
-            <form action="" method="get">
-                <button class="BotonInicioSesion" type="submit">Gestión Bocadillo</button>
-            </form>
+                <button class="BotonInicioSesion" type="button"  onclick="window.location.href=('Bocadillos.html')">Gestión Bocadillo</button>
         </section>
 
         <section class="PseudoFondo">
             <h2>Pedidos</h2>
-            <form action="" method="get">
-                <button class="BotonInicioSesion" type="submit">Gestión Pedido</button>
-            </form>
+                <button class="BotonInicioSesion" type="button"  onclick="window.location.href=('Pedidos.html')">Gestión Pedido</button>
         </section>
 
         <section class="PseudoFondo">
             <h2>Usuarios</h2>
-            <form action="Usuarios.html" method="get">
-                <button class="BotonInicioSesion" type="submit">Gestión Usuarios</button>
-            </form>
+                <button class="BotonInicioSesion" type="button" onclick="window.location.href=('Usuarios.html')">Gestión Usuarios</button>
         </section>
     </div>
 </body>
